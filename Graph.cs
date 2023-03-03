@@ -13,15 +13,15 @@ namespace GraphLibrary
             Edges = new List<Edge>();
         }
 
-        public void AddVertex(string name, object A)
+        public void AddVertex(string name, object obj)
         {
-            if (A is Vertex vA)
-            {
-                vA.Name = name;
+            var vertex = Vertices.FirstOrDefault(x => x.Name == name);
+            if (vertex != null)
+                vertex.Value = obj;
+            else if (obj is Vertex vA)
                 Vertices.Add(vA);
-            }
             else
-                Vertices.Add(new Vertex(name, A));
+                Vertices.Add(new Vertex(name, obj));
         }
 
         public void AddEdge(Vertex A, Vertex B, DirectionState Direction = DirectionState.Both)
@@ -85,6 +85,28 @@ namespace GraphLibrary
             }
             Edges = Edges.Where(e => !edgesToRemove.Contains(e)).ToList();
             return count != Edges.Count;
+        }
+
+        public void PrintAdjacencyLists()
+        {
+            bool swapped;
+            foreach(var vertex in Vertices.OrderBy(v => v.Name))
+            {
+                Console.WriteLine($"{vertex}:");
+                foreach(var edge in vertex.AdjacencyList.OrderBy(e => e.Name))
+                {
+                    swapped = false;
+                    if (edge.B == vertex)
+                    {
+                        edge.SwapVertices();
+                        swapped = true;
+                    }
+                    Console.Write($"\t{edge.Name}");
+                    if (swapped)
+                        edge.SwapVertices();
+                }
+                Console.WriteLine();
+            }
         }
     }
 }
