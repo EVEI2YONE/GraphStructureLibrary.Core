@@ -13,6 +13,12 @@ namespace GraphLibrary
         Both
     }
 
+    public enum ToStringOption
+    {
+        ValueToString,
+        NameToString
+    }
+
     public class Edge
     {
         public Vertex A { get; set; }
@@ -46,6 +52,7 @@ namespace GraphLibrary
         {
             CurrentState = DirectionState.Both;
             _IsBidirectional = true;
+            Option = ToStringOption.NameToString;
         }
         
         public Edge(Vertex A, Vertex B, DirectionState Direction)
@@ -73,13 +80,7 @@ namespace GraphLibrary
             }
         }
 
-        public string? ToString(bool ValueToString = false)
-        {
-            this.ValueToString = ValueToString; 
-            return this.ToString();
-        }
-
-        private bool ValueToString;
+        public ToStringOption Option { get; set; }
         public override string ToString()
         {
             string direction;
@@ -89,9 +90,25 @@ namespace GraphLibrary
                 case DirectionState.BtoA: direction = "<-"; break;
                 default: direction = "<->";break;
             }
-            var valA = ValueToString ? A?.Value?.ToString() : A?.Name;
-            var valB = ValueToString ? B?.Value?.ToString() : B?.Name;
+            var valA = A?.ToString(Option == ToStringOption.ValueToString);
+            var valB = B?.ToString(Option == ToStringOption.ValueToString);
             return $"{valA ?? "_"}{direction}{valB ?? "_"}";
+        }
+
+        public bool Contains(object obj, bool CompareValues = false)
+        {
+            if (obj == null)
+                return false;
+            else if (obj is Vertex v)
+                return v.GetAdjacentVertexFromEdge(this, CompareValues) != null;
+            else if (obj is Edge e)
+            {
+                if (CompareValues && e.Value != null && Value != null)
+                    return e.Value.Equals(Value);
+                else if (!CompareValues && e.Name != null && Name != null)
+                    return e.Name == Name;
+            }
+            return false;
         }
     }
 }

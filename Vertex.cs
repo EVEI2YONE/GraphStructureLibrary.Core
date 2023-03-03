@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,21 @@ namespace GraphLibrary
             AdjacencyList = new List<Edge>();
         }
 
-        public string? ToString(bool ValueToString = false)
+        public Vertex? GetAdjacentVertexFromEdge(Edge edge, bool CompareValues)
+        {
+            if (edge == null)
+                return null;
+            else if (edge.A == null || edge.B == null)
+                return null;
+            else if (edge.A.Equals(this, CompareValues))
+                return edge.B;
+            else if (edge.B.Equals(this, CompareValues))
+                return edge.A;
+            else
+                return null;
+        }
+
+        public string? ToString(bool ValueToString)
         {
             return (ValueToString) ? Value?.ToString() : this.ToString();
         }
@@ -33,18 +48,20 @@ namespace GraphLibrary
         public override string ToString()
             => Name;
 
-        public Vertex? GetAdjacentVertexFromEdge(Edge edge)
+        public bool Equals(object obj, bool CompareValues)
         {
-            Vertex? adjacentVertex;
-            if (edge == null)
-                adjacentVertex = null;
-            else if (edge.A == this)
-                adjacentVertex = edge.B;
-            else if (edge.B == this)
-                adjacentVertex = edge.A;
-            else
-                adjacentVertex = null;
-            return adjacentVertex;
+            if(obj == null)
+                return false;
+            if (obj is Vertex vertex)
+            {
+                if (CompareValues && vertex.Value != null && Value != null)
+                    return Value.Equals(vertex.Value);
+                else if (!CompareValues && vertex.Name != null && Name != null)
+                    return Name.Equals(vertex.Name);
+            }
+            else if (CompareValues && Value != null)
+                return Value.Equals(obj);
+            return false;
         }
     }
 }
