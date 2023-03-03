@@ -4,8 +4,8 @@ namespace GraphLibrary
 {
     public class Graph
     {
-        protected List<Vertex> Vertices { get; set; }
-        protected List<Edge> Edges { get; set; }
+        public List<Vertex> Vertices { get; set; }
+        public List<Edge> Edges { get; set; }
 
         public Graph()
         {
