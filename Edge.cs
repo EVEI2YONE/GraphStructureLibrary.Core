@@ -81,6 +81,7 @@ namespace GraphLibrary
         }
 
         public ToStringOption Option { get; set; }
+
         public override string ToString()
         {
             string direction;

@@ -1,6 +1,4 @@
-﻿using System.Security;
-
-namespace GraphLibrary
+﻿namespace GraphLibrary
 {
     public class Graph
     {
@@ -130,7 +128,7 @@ namespace GraphLibrary
                         edge.SwapVertices();
                         swapped = true;
                     }
-                    Console.Write($"\t{edge.Name}");
+                    Console.Write($"\t{edge}");
                     if (swapped)
                         edge.SwapVertices();
                 }
