@@ -34,16 +34,18 @@ namespace GraphLibrary
         public Edge AddEdge(object A, object B, DirectionState Direction = DirectionState.Both)
         {
             Vertex vA;
-            if (A is Vertex)
-                vA = (Vertex)A;
+            if (A is Vertex v1)
+                vA = Vertices.FirstOrDefault(v => v.Name == v1.Name) ?? v1;
             else
                 vA = new Vertex(Guid.NewGuid().ToString(), A);
             Vertex vB;
-            if (B is Vertex)
-                vB = (Vertex)B;
+            if (B is Vertex v2)
+                vB = Vertices.FirstOrDefault(v => v.Name == v2.Name) ?? v2;
             else
                 vB = new Vertex(Guid.NewGuid().ToString(), B);
             Edge edge = new Edge(vA, vB, Direction);
+            vA.TryAddEdge(edge);
+            vB.TryAddEdge(edge);
             Edges.Add(edge);
             return edge;
         }

@@ -26,6 +26,14 @@ namespace GraphLibrary
             AdjacencyList = new List<Edge>();
         }
 
+        public void TryAddEdge(Edge edge)
+        {
+            if (edge == null)
+                return;
+            if((edge.A == this || edge.B == this) && !AdjacencyList.Any(e => e.Name == edge.Name))
+                AdjacencyList.Add(edge);
+        }
+
         public Vertex? GetAdjacentVertexFromEdge(Edge edge, bool CompareValues)
         {
             if (edge == null)
