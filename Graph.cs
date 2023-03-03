@@ -33,21 +33,29 @@ namespace GraphLibrary
 
         public Edge AddEdge(object A, object B, DirectionState Direction = DirectionState.Both)
         {
-            Vertex vA;
-            if (A is Vertex v1)
-                vA = Vertices.FirstOrDefault(v => v.Name == v1.Name) ?? v1;
-            else
-                vA = new Vertex(Guid.NewGuid().ToString(), A);
-            Vertex vB;
-            if (B is Vertex v2)
-                vB = Vertices.FirstOrDefault(v => v.Name == v2.Name) ?? v2;
-            else
-                vB = new Vertex(Guid.NewGuid().ToString(), B);
-            Edge edge = new Edge(vA, vB, Direction);
-            vA.TryAddEdge(edge);
-            vB.TryAddEdge(edge);
-            Edges.Add(edge);
+            Vertex vA = GetOrCreateVertex(A, out bool vACompareValues);
+            Vertex vB = GetOrCreateVertex(B, out bool vBCompareValues);
+            
+            Edge? edge = Edges.FirstOrDefault(e => e.Contains(vA, vACompareValues) && e.Contains(vB, vBCompareValues));
+            if(edge == null)
+            {
+                edge = new Edge(vA, vB, Direction);
+                vA.TryAddEdge(edge);
+                vB.TryAddEdge(edge);
+                Edges.Add(edge);
+            }
             return edge;
+        }
+
+        private Vertex GetOrCreateVertex(object obj, out bool compareValues)
+        {
+            Vertex v;
+            compareValues = !(obj is Vertex);
+            if (obj is Vertex v1)
+                v = Vertices.FirstOrDefault(v => v.Name == v1.Name) ?? v1;
+            else
+                v = new Vertex(Guid.NewGuid().ToString(), obj);
+            return v;
         }
 
         public void GenerateAdjacencyLists(bool CompareValues)
