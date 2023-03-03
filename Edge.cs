@@ -28,6 +28,8 @@ namespace GraphLibrary
 
         private bool _IsBidirectional;
         public bool IsBidirectional { get { return _IsBidirectional; } }
+        private List<Vertex> _References = new List<Vertex>();
+        public IEnumerable<Vertex> References { get { return _References.AsEnumerable(); } }
 
         private DirectionState _CurrentState;
         public DirectionState CurrentState
@@ -36,15 +38,24 @@ namespace GraphLibrary
             set
             {
                 _CurrentState = value;
+                _References.Clear();
                 switch (value)
                 {
                     case DirectionState.Both:
                         _IsBidirectional = true;
+                        _References.Add(A);
+                        _References.Add(B);
                         break;
-                    default:
+                    case DirectionState.AtoB:
+                        _References.Add(A);
+                        _IsBidirectional = false;
+                        break;
+                    case DirectionState.BtoA:
+                        _References.Add(B);
                         _IsBidirectional = false;
                         break;
                 }
+
             }
         }
 
@@ -59,6 +70,7 @@ namespace GraphLibrary
             this.A = A;
             this.B = B;
             CurrentState = Direction;
+            this.Name = ToString(false);
         }
 
         public void ReversePresentation()
@@ -72,6 +84,7 @@ namespace GraphLibrary
             Vertex temp = A;
             A = B; 
             B = temp;
+            CurrentState = CurrentState;
         }
 
         public void ReverseDirection()

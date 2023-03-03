@@ -17,7 +17,7 @@ namespace GraphLibrary
             Edges = new List<Edge>();
         }
 
-        public Vertex AddVertex(string name, object obj)
+        public Vertex AddVertex(string name, object? obj = null)
         {
             var vertex = Vertices.FirstOrDefault(x => x.Name == name);
             if (vertex != null)
@@ -35,7 +35,7 @@ namespace GraphLibrary
             return vertex;
         }
 
-        public Edge AddEdge(object A, object B, DirectionState Direction = DirectionState.Both)
+        public Edge AddEdge(object? A = null, object? B = null, DirectionState Direction = DirectionState.Both)
         {
             Vertex vA = GetOrCreateVertex(A, out bool vACompareValues);
             Vertex vB = GetOrCreateVertex(B, out bool vBCompareValues);
@@ -51,11 +51,13 @@ namespace GraphLibrary
             return edge;
         }
 
-        private Vertex GetOrCreateVertex(object obj, out bool compareValues)
+        private Vertex GetOrCreateVertex(object? obj, out bool compareValues)
         {
             Vertex v;
             compareValues = !(obj is Vertex);
-            if (obj is Vertex v1)
+            if(obj == null)
+                v = new Vertex(Guid.NewGuid().ToString());
+            else if (obj is Vertex v1)
                 v = Vertices.FirstOrDefault(v => v.Name == v1.Name) ?? v1;
             else
                 v = new Vertex(Guid.NewGuid().ToString(), obj);
