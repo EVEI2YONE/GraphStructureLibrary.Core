@@ -13,20 +13,31 @@ namespace GraphLibrary
             Edges = new List<Edge>();
         }
 
-        public void AddVertex(string name, object obj)
+        public Vertex AddVertex(string name, object obj)
         {
             var vertex = Vertices.FirstOrDefault(x => x.Name == name);
             if (vertex != null)
                 vertex.Value = obj;
             else if (obj is Vertex vA)
+            {
                 Vertices.Add(vA);
+                vertex = vA;
+            }
             else
-                Vertices.Add(new Vertex(name, obj));
+            {
+                vertex = new Vertex(name, obj);
+                Vertices.Add(vertex);
+            }
+            return vertex;
         }
 
-        public void AddEdge(Vertex A, Vertex B, DirectionState Direction = DirectionState.Both)
+        public Edge AddEdge(object A, object B, DirectionState Direction = DirectionState.Both)
         {
-            Edges.Add(new Edge(A, B, Direction));
+            Vertex vA = new Vertex(Guid.NewGuid().ToString(), A);
+            Vertex vB = new Vertex(Guid.NewGuid().ToString(), B);
+            Edge edge = new Edge(vA, vB, Direction);
+            Edges.Add(edge);
+            return edge;
         }
 
         public void GenerateAdjacencyLists(bool CompareValues)
