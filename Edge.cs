@@ -52,7 +52,6 @@ namespace GraphLibrary
         {
             CurrentState = DirectionState.Both;
             _IsBidirectional = true;
-            Option = ToStringOption.NameToString;
         }
         
         public Edge(Vertex A, Vertex B, DirectionState Direction)
@@ -60,6 +59,12 @@ namespace GraphLibrary
             this.A = A;
             this.B = B;
             CurrentState = Direction;
+        }
+
+        public void ReversePresentation()
+        {
+            SwapVertices();
+            ReverseDirection();
         }
 
         public void SwapVertices()
@@ -80,7 +85,13 @@ namespace GraphLibrary
             }
         }
 
-        public ToStringOption Option { get; set; }
+        public static ToStringOption ToStringOption { get; set; } = ToStringOption.NameToString;
+
+        public string ToString(bool PrintValues)
+        {
+            ToStringOption = PrintValues ? ToStringOption.ValueToString : ToStringOption.NameToString;
+            return ToString();
+        }
 
         public override string ToString()
         {
@@ -91,9 +102,9 @@ namespace GraphLibrary
                 case DirectionState.BtoA: direction = "<-"; break;
                 default: direction = "<->";break;
             }
-            var valA = A?.ToString(Option == ToStringOption.ValueToString);
-            var valB = B?.ToString(Option == ToStringOption.ValueToString);
-            return $"{valA ?? "_"}{direction}{valB ?? "_"}";
+            var valA = A?.ToString(ToStringOption == ToStringOption.ValueToString);
+            var valB = B?.ToString(ToStringOption == ToStringOption.ValueToString);
+            return $"{valA ?? "_"} {direction} {valB ?? "_"}";
         }
 
         public bool Contains(object obj, bool CompareValues = false)

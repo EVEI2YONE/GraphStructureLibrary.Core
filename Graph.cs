@@ -1,7 +1,13 @@
-﻿namespace GraphLibrary
+﻿using System.Reflection.Metadata;
+using System.Text;
+
+namespace GraphLibrary
 {
     public class Graph
     {
+
+        public ToStringOption _ToStringOption;
+        public ToStringOption ToStringOption { get { return _ToStringOption; } set { _ToStringOption = value; Edge.ToStringOption = value; } }
         public List<Vertex> Vertices { get; set; }
         public List<Edge> Edges { get; set; }
 
@@ -114,26 +120,29 @@
             return count != Edges.Count;
         }
 
-        public void PrintAdjacencyLists()
+        public string ToString(bool PrintValues = false)
         {
+            StringBuilder presentation = new StringBuilder();
             bool swapped;
             foreach(var vertex in Vertices.OrderBy(v => v.Name))
             {
-                Console.WriteLine($"{vertex}:");
+                presentation.AppendLine($"{vertex.ToString(PrintValues)}:");
                 foreach(var edge in vertex.AdjacencyList.OrderBy(e => e.Name))
                 {
                     swapped = false;
                     if (edge.B == vertex)
                     {
-                        edge.SwapVertices();
+                        edge.ReversePresentation();
                         swapped = true;
                     }
-                    Console.Write($"\t{edge}");
+                    presentation.AppendLine($"\t{edge.ToString(PrintValues)}");
                     if (swapped)
-                        edge.SwapVertices();
+                    {
+                        edge.ReversePresentation();
+                    }
                 }
-                Console.WriteLine();
             }
+            return presentation.ToString();
         }
     }
 }
