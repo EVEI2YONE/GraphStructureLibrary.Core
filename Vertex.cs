@@ -13,6 +13,7 @@ namespace GraphLibrary
         public object? Value { get; set; }
         public List<Vertex> AdjacentVertices { get; set; }
         public List<Edge> AdjacencyList { get; set; }
+        public IEnumerable<Vertex> References { get { return AdjacencyList.SelectMany(e => e.References.Where(r => r != this)); } }
 
         public Vertex(string name, object obj) : this(name)
         {

@@ -17,8 +17,9 @@ namespace GraphLibrary
             Edges = new List<Edge>();
         }
 
-        public Vertex AddVertex(string name, object? obj = null)
+        public Vertex AddVertex(string name = null, object? obj = null)
         {
+            name = name ?? Guid.NewGuid().ToString();
             var vertex = Vertices.FirstOrDefault(x => x.Name == name);
             if (vertex != null)
                 vertex.Value = obj;
