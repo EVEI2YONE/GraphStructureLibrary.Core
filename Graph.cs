@@ -22,7 +22,7 @@ namespace GraphLibrary
             name = name ?? Guid.NewGuid().ToString();
             var vertex = Vertices.FirstOrDefault(x => x.Name == name);
             if (vertex != null)
-                vertex.Value = obj;
+                vertex.Value = vertex.Value ?? obj;
             else if (obj is Vertex vA)
             {
                 Vertices.Add(vA);
@@ -123,13 +123,16 @@ namespace GraphLibrary
             return count != Edges.Count;
         }
 
-        public string ToString(bool PrintValues = false)
+        public string ToString(bool PrintVertexValues = false, bool PrintEdgeValues = false)
         {
             StringBuilder presentation = new StringBuilder();
             bool swapped;
             foreach(var vertex in Vertices.OrderBy(v => v.Name))
             {
-                presentation.AppendLine($"{vertex.ToString(PrintValues)}:");
+                if (!PrintVertexValues)
+                    presentation.AppendLine($"{vertex.ToString(PrintVertexValues)}:");
+                else
+                    presentation.Append(vertex.ToString(PrintVertexValues));
                 foreach(var edge in vertex.AdjacencyList.OrderBy(e => e.Name))
                 {
                     swapped = false;
@@ -138,7 +141,10 @@ namespace GraphLibrary
                         edge.ReversePresentation();
                         swapped = true;
                     }
-                    presentation.AppendLine($"\t{edge.ToString(PrintValues)}");
+                    if(!PrintEdgeValues)
+                        presentation.AppendLine($"\t{edge.ToString(PrintEdgeValues)}");
+                    else
+                        presentation.Append(edge.ToString(PrintEdgeValues));
                     if (swapped)
                     {
                         edge.ReversePresentation();
